@@ -1,2 +1,18 @@
-# Machine Learning model to predict weather in Argentina
+# Machine Learning model to predict weather 24h ahead
+
+Machine Learning project to predict temperature in 24h based on today's weather.
+
+## Getting data
+
+All data is downloaded from Open-Meteo, ERA5. It has weather features for every hour, from 2010 to 2026. (DOWNLOAD HERE)
+
+## Analyzing the data
+
+As the first step of a ML project, I analyzed the data that the model will be training with. A good start is to check if there is any broken or absent information in the dataframe.
+In this case there is no lack of information in any rows of the dataframe as the data's been built by a model. This dataframe has 145344 rows and 16 columns. Temperature ranges from -1.4 to 38.9 °C. It is relevant to say that temperature has a strong daily cycle and tends to follow a trend.
+
+## Baseline
+
+The baseline is used to compare against the future model, it predicts that the temperature tomorrow will be the same as now. First I need to split the data into train and test sets, the data is chronological and the model will predict the future from the past, so the test set must come after the train set. In this case, the baseline had a root mean squared error of 3.015 °C. This means that the baseline's predictions are off by an average 3.015 °C.
+
 
