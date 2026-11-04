@@ -15,4 +15,15 @@ In this case there is no lack of information in any rows of the dataframe as the
 
 The baseline is used to compare against the future model, it predicts that the temperature tomorrow will be the same as now. First I need to split the data into train and test sets, the data is chronological and the model will predict the future from the past, so the test set must come after the train set. In this case, the baseline had a root mean squared error of 3.015 °C. This means that the baseline's predictions are off by an average 3.015 °C.
 
+## Model
 
+I trained two models on the same data and compared them against the baseline, adding features one step at a time to measure the improvement of the model's predictions. All errors are RMSE on the test set.
+
+| Step | RMSE (°C) |
+|---|---|
+| Baseline | 3.015 |
+| Linear regression | 2.75 |
+| Gradient boosting | 2.61 |
+| + hour and month | 2.57 |
+| + temperature lags | 2.56 |
+| + hour, month and temperature lags | 2.44 |
