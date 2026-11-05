@@ -27,3 +27,14 @@ I trained two models on the same data and compared them against the baseline, ad
 | + hour and month | 2.57 |
 | + temperature lags | 2.56 |
 | + hour, month and temperature lags | 2.44 |
+| + Neuquén | 2.07 |
+| + the other 21 provincial capitals | 1.93 |
+| + tuned hyperparameters | 1.86 |
+
+When adding features from other cities we can see an improvement in the model with the following errors:
+
+## Hiperparameters
+
+I tuned the gradient boosting model with `RandomizedSearchCV` and `TimeSeriesSplit` using the training set. So the test stayed clean for the final measurment.
+
+The best parameters came in to be: `learning_rate=0.03`, `max_iter=1000`, `max_leaf_nodes=100`, `min_samples_leaf=75`
