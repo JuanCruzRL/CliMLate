@@ -1,12 +1,18 @@
-from data import prepare_data
+from data import prepare_data, OTHER_CITIES
 from sklearn.metrics import root_mean_squared_error
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-X_train, X_test, y_train, y_test = prepare_data("Buenos Aires")
+X_train, X_test, y_train, y_test = prepare_data("Buenos Aires", OTHER_CITIES)
 
 model = LinearRegression()
-model2 = HistGradientBoostingRegressor()
+model2 = HistGradientBoostingRegressor(
+    learning_rate=0.03,
+    max_iter=1000,
+    max_leaf_nodes=100,
+    min_samples_leaf=75,
+    random_state=42
+)
 model.fit(X_train, y_train)
 model2.fit(X_train, y_train)
 prediction = model.predict(X_test)
