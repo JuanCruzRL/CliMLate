@@ -1,4 +1,4 @@
-# Machine Learning model to predict weather 24h ahead
+# Machine Learning model to predict weather 24h ahead in the city of Buenos Aires
 
 Machine Learning project to predict temperature in 24h based on today's weather.
 
