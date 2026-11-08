@@ -38,3 +38,9 @@ When adding features from other cities we can see an improvement in the model wi
 I tuned the gradient boosting model with `RandomizedSearchCV` and `TimeSeriesSplit` using the training set. So the test stayed clean for the final measurment.
 
 The best parameters came in to be: `learning_rate=0.03`, `max_iter=1000`, `max_leaf_nodes=100`, `min_samples_leaf=75`
+
+## Live predictions
+
+After training the model, it's saved with `joblib` so predictions don't need training. 
+
+To predict, `src/live.py` gets the current data from the city we are trying to predict weather 24h ahead and all 23 other cities from Open-Meteo forecast API. It builds a single row with the data the model needs to make a prediction. 
