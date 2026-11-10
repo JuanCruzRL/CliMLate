@@ -1,5 +1,7 @@
 # Machine Learning model to predict weather 24h ahead in the city of Buenos Aires
 
+**Live demo:** https://climlate.onrender.com
+
 Machine Learning project to predict temperature in 24h based on today's weather.
 
 ## Getting data
@@ -28,26 +30,20 @@ I trained two models on the same data and compared them against the baseline, ad
 | Linear regression | 2.75 |
 | Gradient boosting | 2.61 |
 | + hour and month | 2.57 |
-| + temperature lags | 2.56 |
+| Hour and temperature lags, no month | 2.56 |
 | + hour, month and temperature lags | 2.44 |
 | + Neuquén | 2.07 |
 | + the other 21 provincial capitals | 1.93 |
 | + tuned hyperparameters | 1.86 |
 
-When adding features from other cities we can see an improvement in the model with the following errors:
+## Hyperparameters
 
-## Hiperparameters
+I tuned the gradient boosting model with `RandomizedSearchCV` and `TimeSeriesSplit` using the training set. So the test stayed clean for the final measurement.
 
-I tuned the gradient boosting model with `RandomizedSearchCV` and `TimeSeriesSplit` using the training set. So the test stayed clean for the final measurment.
-
-The best parameters came in to be: `learning_rate=0.03`, `max_iter=1000`, `max_leaf_nodes=100`, `min_samples_leaf=75`
+The best parameters were: `learning_rate=0.03`, `max_iter=1000`, `max_leaf_nodes=100`, `min_samples_leaf=75`
 
 ## Live predictions
 
 After training the model, it's saved with `joblib` so predictions don't need training. 
 
 To predict, `src/live.py` gets the current data from the city we are trying to predict weather 24h ahead and all 23 other cities from Open-Meteo forecast API. It builds a single row with the data the model needs to make a prediction.
-
-## Demo
-
-**Live demo:** https://climlate.onrender.com
