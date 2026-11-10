@@ -51,6 +51,4 @@ def predict(city):
     row = get_live_data(city)
     model = joblib.load(f"../models/{city}.pkl")
     X = row.drop(columns=["time"])
-    return model.predict(X)
-
-print(predict("Buenos Aires"))
+    return float(model.predict(X)[0])
