@@ -1,5 +1,4 @@
 res/
 venv/
 src/__pycache__
-/models
 .env
