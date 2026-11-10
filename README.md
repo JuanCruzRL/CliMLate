@@ -4,7 +4,10 @@ Machine Learning project to predict temperature in 24h based on today's weather.
 
 ## Getting data
 
-All data is downloaded from Open-Meteo, ERA5. It has weather features for every hour, from 2010 to 2026. (DOWNLOAD HERE)
+All data is downloaded from Open-Meteo, ERA5. It has weather features for every hour, from 2010 to 2026. 
+To download the data (23 CSV files, ~260 MB), run from `src/`: `python3 download.py`
+Weather data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0), based on ERA5 reanalysis from Copernicus.
+The download takes around 30 minutes, and may take longer if Open-Meteo's rate limit is reached. You can stop it and run it again: it skips the cities already downloaded.
 
 ## Analyzing the data
 
@@ -43,4 +46,8 @@ The best parameters came in to be: `learning_rate=0.03`, `max_iter=1000`, `max_l
 
 After training the model, it's saved with `joblib` so predictions don't need training. 
 
-To predict, `src/live.py` gets the current data from the city we are trying to predict weather 24h ahead and all 23 other cities from Open-Meteo forecast API. It builds a single row with the data the model needs to make a prediction. 
+To predict, `src/live.py` gets the current data from the city we are trying to predict weather 24h ahead and all 23 other cities from Open-Meteo forecast API. It builds a single row with the data the model needs to make a prediction.
+
+## Demo
+
+**Live demo:** https://climlate.onrender.com
