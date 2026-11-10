@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CliMLate</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1b1f24;
+      --muted: #5f6b7a;
+      --accent: #2563eb;
+      --border: #e3e7ec;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1419;
+        --card: #182029;
+        --text: #e6edf3;
+        --muted: #8b98a8;
+        --accent: #60a5fa;
+        --border: #263241;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+    }
+    h1 { margin: 0; font-size: 1.1rem; letter-spacing: 0.02em; }
+    .subtitle { margin: 4px 0 24px; color: var(--muted); font-size: 0.9rem; }
+    label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+    }
+    .result { margin-top: 28px; text-align: center; }
+    .temp { font-size: 4rem; font-weight: 600; line-height: 1; margin: 0; }
+    .temp .unit { font-size: 1.5rem; color: var(--muted); font-weight: 400; }
+    .when { margin: 10px 0 0; color: var(--muted); }
+    .message { color: var(--muted); }
+    footer {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>CliMLate</h1>
+    <p class="subtitle">Temperatura dentro de 24 horas</p>
+
+    <label for="city">Ciudad</label>
+    <select id="city">
+      <option>Buenos Aires</option>
+    </select>
+
+    <section class="result" id="result" aria-live="polite">
+      <p class="message">Cargando...</p>
+    </section>
+
+    <footer>
+      Gradient boosting entrenado con datos horarios de 23 capitales argentinas (ERA5, 2010-2026).
+      Error en el test: 1.86 °C. Predecir "mañana igual que hoy": 3.02 °C.
+    </footer>
+  </main>
+
+  <script>
+    const result = document.getElementById("result");
+    const select = document.getElementById("city");
+
+    const formatWhen = (iso) => new Intl.DateTimeFormat("es-AR", {
+      timeZone: "America/Argentina/Buenos_Aires",
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).format(new Date(iso));
+
+    function show(html) {
+      result.innerHTML = html;
+    }
+
+    async function load(city) {
+      show('<p class="message">Cargando...</p>');
+      try {
+        const res = await fetch(`/prediction?city=${encodeURIComponent(city)}`);
+        if (res.status === 404) {
+          show('<p class="message">Todavía no hay predicciones para esta ciudad.</p>');
+          return;
+        }
+        if (!res.ok) throw new Error(res.status);
+        const data = await res.json();
+        show(`
+          <p class="temp">${data.temp_pred.toFixed(1)}<span class="unit"> °C</span></p>
+          <p class="when">para el ${formatWhen(data.fecha_pred)} h</p>
+        `);
+      } catch (err) {
+        show('<p class="message">No se pudo cargar la predicción.</p>');
+      }
+    }
+
+    select.addEventListener("change", () => load(select.value));
+    load(select.value);
+  </script>
+</body>
+</html>
