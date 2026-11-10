@@ -31,7 +31,8 @@ def get_city(city):
         f"?latitude={lat}&longitude={lon}"
         f"&hourly={VARIABLES}"
         "&past_hours=6&forecast_hours=1"
-        "&timezone=America/Argentina/Buenos_Aires")
+        "&timezone=America/Argentina/Buenos_Aires", timeout=30)
+    res.raise_for_status()
     return pd.DataFrame(res.json()["hourly"])
 
 def get_live_data(city):
@@ -39,6 +40,7 @@ def get_live_data(city):
     for c in OTHER_CITIES:
         if c == city:
             continue
+        print(c, flush=True)
         other_df = get_city(c)
         other_df.drop(columns=["time"], inplace=True)
         other_df = other_df.add_prefix(f"{c}_")
