@@ -25,24 +25,25 @@ COORDS = {
     "Ushuaia": (-54.80, -68.30),
 }
 
-def get_city(city):
-    lat, lon = COORDS[city]
+def get_cities(cities):
+    lats = ",".join(str(COORDS[c][0]) for c in cities)
+    lons = ",".join(str(COORDS[c][1]) for c in cities)
     res = requests.get(url="https://api.open-meteo.com/v1/forecast"
-        f"?latitude={lat}&longitude={lon}"
+        f"?latitude={lats}&longitude={lons}"
         f"&hourly={VARIABLES}"
         "&past_hours=6&forecast_hours=1"
-        "&timezone=America/Argentina/Buenos_Aires", timeout=30)
+        "&timezone=America/Argentina/Buenos_Aires", timeout=20)
     res.raise_for_status()
-    return pd.DataFrame(res.json()["hourly"])
+    return [pd.DataFrame(d["hourly"]) for d in res.json()]
 
 def get_live_data(city):
-    df = get_city(city)
-    for c in OTHER_CITIES:
+    others = [c for c in OTHER_CITIES if c != city]
+    dfs = get_cities([city] + others)
+    df = dfs[0]
+    for c, other_df in zip(others, dfs[1:]):
         if c == city:
             continue
-        print(c, flush=True)
-        other_df = get_city(c)
-        other_df.drop(columns=["time"], inplace=True)
+        other_df = other_df.drop(columns=["time"])
         other_df = other_df.add_prefix(f"{c}_")
         df = pd.concat([df, other_df], axis=1)
     df = df.copy()
@@ -54,3 +55,5 @@ def predict(city):
     model = joblib.load(f"../models/{city}.pkl")
     X = row.drop(columns=["time"])
     return float(model.predict(X)[0])
+
+print(predict("Buenos Aires"))
